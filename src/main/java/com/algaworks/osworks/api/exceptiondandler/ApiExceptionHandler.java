@@ -19,7 +19,7 @@ import java.util.ArrayList;
     public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(NegocioException.class)
-    private ResponseEntity<Object> handleNagocio(NegocioException ex, WebRequest request) {
+    private ResponseEntity<Object> handleNegocio(NegocioException ex, WebRequest request) {
         var status = HttpStatus.BAD_REQUEST;
         var exceptionMessage = new ExceptionMessage();
 
