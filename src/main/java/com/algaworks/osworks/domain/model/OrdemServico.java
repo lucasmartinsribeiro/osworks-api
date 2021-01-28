@@ -7,18 +7,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
+import javax.persistence.OneToMany;
 
-import com.algaworks.osworks.domain.ValidationGroups;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.algaworks.osworks.api.model.Comentario;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class OrdemServico {
@@ -26,27 +22,22 @@ public class OrdemServico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-	@Valid
-	@ConvertGroup(from = Default.class, to = ValidationGroups.ClienteId.class)
-	@NotNull
     @ManyToOne
     private Cliente cliente;
 
-	@NotBlank
     private String descricao;
 	
-	@NotNull
     private BigDecimal preco;
 
-    @JsonProperty(access = Access.READ_ONLY)
     @Enumerated(EnumType.STRING)
     private StatusOrdemServico status;
 
-    @JsonProperty(access = Access.READ_ONLY)
     private OffsetDateTime dataAbertura;
     
-    @JsonProperty(access = Access.READ_ONLY)
     private OffsetDateTime dataFinalizacao;
+    
+    @OneToMany(mappedBy = "ordemServico")
+    private List<Comentario> cometarios = new ArrayList<>();
     
 	public Long getId() {
 		return id;
@@ -102,6 +93,14 @@ public class OrdemServico {
 	public void setDataFinalizacao(OffsetDateTime dataFinalizacao) {
 		this.dataFinalizacao = dataFinalizacao;
 	}
+	
+	public List<Comentario> getCometarios() {
+        return cometarios;
+    }
+
+    public void setCometarios(List<Comentario> cometarios) {
+        this.cometarios = cometarios;
+    }
 	
 	@Override
 	public int hashCode() {
