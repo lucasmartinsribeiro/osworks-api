@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.algaworks.osworks.api.model.Comentario;
+import com.algaworks.osworks.domain.exception.NegocioException;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -37,7 +38,7 @@ public class OrdemServico {
     private OffsetDateTime dataFinalizacao;
     
     @OneToMany(mappedBy = "ordemServico")
-    private List<Comentario> cometarios = new ArrayList<>();
+    private List<Comentario> comentarios = new ArrayList<>();
     
 	public Long getId() {
 		return id;
@@ -94,12 +95,12 @@ public class OrdemServico {
 		this.dataFinalizacao = dataFinalizacao;
 	}
 	
-	public List<Comentario> getCometarios() {
-        return cometarios;
+	public List<Comentario> getComentarios() {
+        return comentarios;
     }
 
-    public void setCometarios(List<Comentario> cometarios) {
-        this.cometarios = cometarios;
+    public void setCometarios(List<Comentario> comentarios) {
+        this.comentarios = comentarios;
     }
 	
 	@Override
@@ -126,5 +127,20 @@ public class OrdemServico {
 		return true;
 	}
 	
+	public boolean podeSerFinalizada(){
+        return StatusOrdemServico.ABERTA.equals(getStatus());
+    }
+
+    public boolean naoPodeSerFinalizada(){
+        return !podeSerFinalizada();
+    }
+
+    public void finalizar() {
+        if (naoPodeSerFinalizada()){
+            throw new NegocioException("Ordem de serviço não pode ser finalizar");
+        }
+        setStatus(StatusOrdemServico.FINALIZADA);
+        setDataFinalizacao(OffsetDateTime.now());
+    }
 	
 }

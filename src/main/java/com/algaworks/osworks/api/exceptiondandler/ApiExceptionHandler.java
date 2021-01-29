@@ -1,5 +1,6 @@
 package com.algaworks.osworks.api.exceptiondandler;
 
+import com.algaworks.osworks.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.osworks.domain.exception.NegocioException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,19 @@ import java.util.ArrayList;
 
 @ControllerAdvice
     public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+	
+	@ExceptionHandler(EntidadeNaoEncontradaException.class)
+    private ResponseEntity<Object> handleEntidadeNaoEncontrada(NegocioException ex, WebRequest request) {
+        var status = HttpStatus.NOT_FOUND;
+        var exceptionMessage = new ExceptionMessage();
 
+        exceptionMessage.setStatus(status.value());
+        exceptionMessage.setTitulo(ex.getMessage());
+        exceptionMessage.setDataHora(OffsetDateTime.now());
+
+        return handleExceptionInternal(ex, exceptionMessage, new HttpHeaders(), status, request);
+    }
+	
 	@ExceptionHandler(NegocioException.class)
     private ResponseEntity<Object> handleNegocio(NegocioException ex, WebRequest request) {
         var status = HttpStatus.BAD_REQUEST;
