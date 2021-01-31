@@ -137,7 +137,7 @@ public class OrdemServico {
 
     public void finalizar() {
         if (naoPodeSerFinalizada()){
-            throw new NegocioException("Ordem de serviço não pode ser finalizar");
+            throw new NegocioException("Ordem de serviço não pode ser finalizada.");
         }
         setStatus(StatusOrdemServico.FINALIZADA);
         setDataFinalizacao(OffsetDateTime.now());
